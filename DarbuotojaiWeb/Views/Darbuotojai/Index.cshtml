@@ -49,6 +49,9 @@
 				Pavardė
 			</th>
 			<th>
+				Statusas
+			</th>
+			<th>
 
 			</th>
 		</tr>
@@ -59,16 +62,35 @@
 				<tr>
 					<td>@darbuotojas.Vardas</td>
 					<td>@darbuotojas.Pavarde</td>
-					<td>
-						<div class="w-75 btn-group" role="group">
-							<a asp-controller="Darbuotojai" asp-action="Koreguoti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-primary mx-2">
+
+					@if (darbuotojas.Statusas == "aktyvus")
+					{
+						<td class="text-success">@darbuotojas.Statusas</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a asp-controller="Darbuotojai" asp-action="Ziureti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-success mx-2" style="width: 150px;">
+									<i class="bi bi-eye-fill"></i> Žiūrėti duomenis
+								</a>
+								<a asp-controller="Darbuotojai" asp-action="Koreguoti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-primary mx-2" style="width: 150px;">
 									<i class="bi bi-pencil"></i> Koreguoti duomenis
-							</a>
-							<a asp-controller="Darbuotojai" asp-action="Pasalinti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-danger mx-2">
+								</a>
+								<a asp-controller="Darbuotojai" asp-action="Pasalinti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-danger mx-2" style="width: 150px;">
 									<i class="bi bi-file-earmark-minus"></i> Pašalinti darbuotoją
+								</a>
+							</div>
+						</td>
+					}
+					else
+					{	
+						<td class="text-secondary">@darbuotojas.Statusas</td>
+						<td>
+						<div class="btn-group" role="group">
+							<a asp-controller="Darbuotojai" asp-action="Ziureti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-secondary mx-2" style="width: 150px;">
+								<i class="bi bi-eye-fill"></i> Žiūrėti duomenis
 							</a>
 						</div>
-					</td>
+						</td>
+					}
 				</tr>
 			}
 		</tbody>

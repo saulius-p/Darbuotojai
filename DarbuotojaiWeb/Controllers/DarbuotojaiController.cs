@@ -26,9 +26,9 @@ namespace DarbuotojaiWeb.Controllers
 		{
 			List<Darbuotojas> objDarbuotojaiSar = _db.Darbuotojai.ToList();
 			List<Darbuotojas> filtruotasSar = objDarbuotojaiSar
-				.Where(d => string.IsNullOrEmpty(vardas) || d.Vardas.Contains(vardas))
-				.Where(d => string.IsNullOrEmpty(pavarde) || d.Pavarde.Contains(pavarde))
-				.Where(d => string.IsNullOrEmpty(statusas) || d.Statusas.Contains(statusas))
+				.Where(d => string.IsNullOrEmpty(vardas) || d.Vardas.ToLower().Contains(vardas.ToLower()))
+				.Where(d => string.IsNullOrEmpty(pavarde) || d.Pavarde.ToLower().Contains(pavarde.ToLower()))
+				.Where(d => string.IsNullOrEmpty(statusas) || d.Statusas == statusas)
 				.ToList();
 			return View(filtruotasSar);
 		}
@@ -155,18 +155,12 @@ namespace DarbuotojaiWeb.Controllers
 										  .Include(d => d.DarbuotojasPareigos)
 										  .ThenInclude(dp => dp.Pareiga)
 										  .FirstOrDefault(u => u.DarbuotojasId == id);
-			Debug.WriteLine("TESTAS");
-			Debug.WriteLine(darbuotojas.Vardas);
-			Debug.WriteLine(darbuotojas.DarbuotojasPareigos.ElementAtOrDefault(2));
 
 			if (darbuotojas == null)
 			{
 				return NotFound();
 			}
-
-			List<Pareiga> objPareigosSar = _db.Pareigos.ToList();
-			ViewBag.GalimosPareigos = objPareigosSar;
-
+			
 			return View(darbuotojas);
 		}
 
@@ -180,7 +174,28 @@ namespace DarbuotojaiWeb.Controllers
 			}
 			darbuotojas.Statusas = "neaktyvus";
 			_db.SaveChanges();
+			
 			return RedirectToAction("Index");
+		}
+
+		public IActionResult Ziureti(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
+
+			Darbuotojas? darbuotojas = _db.Darbuotojai
+										  .Include(d => d.DarbuotojasPareigos)
+										  .ThenInclude(dp => dp.Pareiga)
+										  .FirstOrDefault(u => u.DarbuotojasId == id);
+
+			if (darbuotojas == null)
+			{
+				return NotFound();
+			}
+			
+			return View(darbuotojas);
 		}
 	}
 }
