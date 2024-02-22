@@ -1,0 +1,76 @@
+﻿@using DarbuotojaiWeb.Models
+@model List<Darbuotojas>
+
+<div class="container">
+	<div class="row pt-4 pb-3">
+		<div class="col-6">
+			<h2 class="text-primary">
+				Darbuotojų sąrašas
+			</h2>
+		</div>
+		<div class="col-6 text-end">
+			<a asp-controller="Darbuotojai" asp-action="Prideti" class="btn btn-primary">
+				<i class="bi bi-plus-circle-dotted"></i> Pridėti darbuotoją
+			</a>
+		</div>
+	</div>
+
+	<form method="post" class="container mt-1 mb-4">
+		<div class="row">
+			<div class="col-md-4">
+				<input type="text" class="form-control" name="vardas" placeholder="Vardas">
+			</div>
+			<div class="col-md-4">
+				<input type="text" class="form-control" name="pavarde" placeholder="Pavardė">
+			</div>
+			<div class="col-md-4">
+				<select class="form-select" name="statusas" aria-label="Statusas">
+					<option value="">-- Pasirinkite statusą --</option>
+					<option value="aktyvus">Aktyvus</option>
+					<option value="neaktyvus">Neaktyvus</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> Filtruoti</button>
+				<a asp-controller="Darbuotojai" asp-action="Index" class="btn btn-primary">
+					<i class="bi bi-x"></i> Nuimti filtrą
+				</a>
+			</div>
+		</div>
+	</form>
+
+	<table class="table table-bordered table-stripped">
+		<thead>
+		<tr>
+			<th>
+				Vardas
+			</th>
+			<th>
+				Pavardė
+			</th>
+			<th>
+
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+			@foreach(var darbuotojas in Model)
+			{
+				<tr>
+					<td>@darbuotojas.Vardas</td>
+					<td>@darbuotojas.Pavarde</td>
+					<td>
+						<div class="w-75 btn-group" role="group">
+							<a asp-controller="Darbuotojai" asp-action="Koreguoti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-primary mx-2">
+									<i class="bi bi-pencil"></i> Koreguoti duomenis
+							</a>
+							<a asp-controller="Darbuotojai" asp-action="Pasalinti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-danger mx-2">
+									<i class="bi bi-file-earmark-minus"></i> Pašalinti darbuotoją
+							</a>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

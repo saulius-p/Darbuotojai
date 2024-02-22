@@ -1,0 +1,67 @@
+﻿@using DarbuotojaiWeb.Models
+@model Darbuotojas
+@{
+	List<Pareiga> galimosPareigos = ViewBag.GalimosPareigos;
+}
+
+<style>
+	.hidden {
+		display: none;
+	}
+</style>
+
+
+<div class="text-danger">
+	@foreach (var modelState in ViewData.ModelState.Values)
+	{
+		foreach (var error in modelState.Errors)
+		{
+			<p>@error.ErrorMessage</p>
+		}
+	}
+</div>
+
+<form method="post">
+	<input asp-for="DarbuotojasId" hidden />
+	<div class="border p-3 mt-4">
+		<h2 class="text-primary">Pašalinti darbuotoją?</h2>
+		<hr />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Vardas</label>
+		<input asp-for="Vardas" disabled class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Pavardė</label>
+		<input asp-for="Pavarde" disabled class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Gimimo data</label>
+		<input asp-for="GimimoData" type="date" disabled class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Adresas</label>
+		<input asp-for="Adresas" disabled class="form-control" />
+	</div>
+
+	<div class="mb-3 row p-1">
+		<label class="mb-3">Priskirtos pareigos:</label>
+			@foreach (var pareiga in Model.DarbuotojasPareigos.Select(dp => dp.Pareiga))
+			{
+				<span>@pareiga.Pavadinimas</span>
+			}
+	</div>
+
+	<div class="row">
+		<div class="col-6 col-md-3">
+			<button type="submit" class="btn btn-danger form-control">Pašalinti darbuotoją</button>
+		</div>
+		<div class="col-6 col-md-3">
+			<a asp-controller="Darbuotojai" asp-action="Index" class="btn btn-outline-secondary border form-control">
+				Atgal
+			</a>
+		</div>
+	</div>
+
+
+</form>
