@@ -160,7 +160,7 @@ namespace DarbuotojaiWeb.Controllers
 			{
 				return NotFound();
 			}
-			
+
 			return View(darbuotojas);
 		}
 
@@ -174,7 +174,6 @@ namespace DarbuotojaiWeb.Controllers
 			}
 			darbuotojas.Statusas = "neaktyvus";
 			_db.SaveChanges();
-			
 			return RedirectToAction("Index");
 		}
 
@@ -194,7 +193,7 @@ namespace DarbuotojaiWeb.Controllers
 			{
 				return NotFound();
 			}
-			
+
 			return View(darbuotojas);
 		}
 	}
