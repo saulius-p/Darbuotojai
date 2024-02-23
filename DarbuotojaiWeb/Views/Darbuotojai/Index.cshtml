@@ -1,5 +1,4 @@
-﻿@using DarbuotojaiWeb.Models
-@model List<Darbuotojas>
+﻿@model DarbuotojaiWeb.Controllers.DarbuotojaiController.PaginatedList<Darbuotojas>
 
 <div class="container">
 	<div class="row pt-4 pb-3">
@@ -30,6 +29,7 @@
 					<option value="neaktyvus">Neaktyvus</option>
 				</select>
 			</div>
+			<input type="hidden" name="pusl" value="1">
 			<div class="col-md-4">
 				<button type="submit" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> Filtruoti</button>
 				<a asp-controller="Darbuotojai" asp-action="Index" class="btn btn-primary">
@@ -41,23 +41,23 @@
 
 	<table class="table table-bordered table-stripped">
 		<thead>
-		<tr>
-			<th>
-				Vardas
-			</th>
-			<th>
-				Pavardė
-			</th>
-			<th>
-				Statusas
-			</th>
-			<th>
+			<tr>
+				<th>
+					Vardas
+				</th>
+				<th>
+					Pavardė
+				</th>
+				<th>
+					Statusas
+				</th>
+				<th>
 
-			</th>
-		</tr>
+				</th>
+			</tr>
 		</thead>
 		<tbody>
-			@foreach(var darbuotojas in Model)
+			@foreach (var darbuotojas in Model.Items)
 			{
 				<tr>
 					<td>@darbuotojas.Vardas</td>
@@ -70,10 +70,10 @@
 								<a asp-controller="Darbuotojai" asp-action="Ziureti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-success mx-2" style="width: 150px;">
 									<i class="bi bi-eye-fill"></i> Žiūrėti duomenis
 								</a>
-									<a asp-controller="Darbuotojai" asp-action="Koreguoti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-primary mx-2" style="width: 150px;">
+								<a asp-controller="Darbuotojai" asp-action="Koreguoti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-primary mx-2" style="width: 150px;">
 									<i class="bi bi-pencil"></i> Koreguoti duomenis
 								</a>
-									<a asp-controller="Darbuotojai" asp-action="Pasalinti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-danger mx-2" style="width: 150px;">
+								<a asp-controller="Darbuotojai" asp-action="Pasalinti" asp-route-id="@darbuotojas.DarbuotojasId" class="btn btn-danger mx-2" style="width: 150px;">
 									<i class="bi bi-file-earmark-minus"></i> Pašalinti darbuotoją
 								</a>
 							</div>
@@ -94,4 +94,21 @@
 			}
 		</tbody>
 	</table>
+
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<nav aria-label="Page navigation">
+					<ul class="pagination">
+						@for (var i = 1; i <= Model.TotalPages; i++)
+						{
+							<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+								<a class="page-link" href="?pusl=@i&vardas=@ViewData["VardasFilter"]&pavarde=@ViewData["PavardeFilter"]&statusas=@ViewData["StatusasFilter"]">@i</a>
+							</li>
+						}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
 </div>
