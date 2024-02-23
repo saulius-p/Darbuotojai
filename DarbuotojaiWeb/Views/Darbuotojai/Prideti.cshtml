@@ -24,11 +24,11 @@
 <form method="post">
 	<div class="border p-3 mt-4">
 		<h2 class="text-primary">Pridėti naują darbuotoją</h2>
-		<hr/>
+		<hr />
 	</div>
 	<div class="mb-3 row p-1">
 		<label class="p-0">Vardas</label>
-		<input asp-for="Vardas" class="form-control"/>
+		<input asp-for="Vardas" class="form-control" />
 	</div>
 	<div class="mb-3 row p-1">
 		<label class="p-0">Pavardė</label>
@@ -44,13 +44,13 @@
 	</div>
 
 	<div class="mb-3 row p-1">
-		<label>Selected Pareigos:</label>
+		<label>Priskirtos pareigos:</label>
 		<div id="selectedPareigosContainer"></div>
 	</div>
 
 	<div class="mb-3 row p-1">
-		<label>Select Pareigos:</label>
-		<input type="text" id="pareigosSearch" class="form-control" placeholder="Search Pareigos" />
+		<label>Pridėti pareigą:</label>
+		<input type="text" id="pareigosSearch" class="form-control" placeholder="Ieškoti pareigų" />
 		<div id="pareigosList" class="hidden">
 			@foreach (var pareiga in galimosPareigos)
 			{
@@ -83,24 +83,20 @@
 				}
 			});
 
-			// Handle checkbox change
 			$("input[name='pasirinktosPareigos']").on("change", function () {
 				var selectedPareigaId = $(this).val();
 				var selectedPareigaName = $(this).next("label").text();
 
 				if ($(this).is(":checked")) {
-					// Checkbox is checked, add to the selectedPareigosContainer
 					$("#selectedPareigosContainer").append("<div class='selected-pareiga'>" +
 						"<span class='selected-pareiga-name'>" + selectedPareigaName + "</span>" +
 						"<button type='button' class='remove-selected-pareiga' data-pareiga-id='" + selectedPareigaId + "'>x</button>" +
 						"</div>");
 				} else {
-					// Checkbox is unchecked, remove from the selectedPareigosContainer
 					$("#selectedPareigosContainer").find("[data-pareiga-id='" + selectedPareigaId + "']").parent().remove();
 				}
 			});
 
-			// Handle removing selected Pareiga
 			$(document).on("click", ".remove-selected-pareiga", function () {
 				var pareigaIdToRemove = $(this).data("pareiga-id");
 				$("input[name='pasirinktosPareigos'][value='" + pareigaIdToRemove + "']").prop("checked", false);
@@ -120,6 +116,6 @@
 			</a>
 		</div>
 	</div>
-	
-	
+
+
 </form>
