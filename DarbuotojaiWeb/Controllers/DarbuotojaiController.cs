@@ -103,7 +103,7 @@ namespace DarbuotojaiWeb.Controllers
 			}
 			else
 			{
-				Debug.WriteLine("Error: darbuotojas is null");
+				Debug.WriteLine("Error: darbuotojas yra null");
 				return View("Error");
 			}
 
@@ -237,12 +237,20 @@ namespace DarbuotojaiWeb.Controllers
 		[HttpPost, ActionName("Pasalinti")]
 		public IActionResult PasalintiPOST(int? id)
 		{
-			Darbuotojas? darbuotojas = _db.Darbuotojai.Find(id);
+			Darbuotojas? darbuotojas = _db.Darbuotojai
+										  .Include(d => d.Pacientai)
+										  .FirstOrDefault(u => u.DarbuotojasId == id);
 			if (darbuotojas == null)
 			{
 				return NotFound();
 			}
 			darbuotojas.Statusas = "neaktyvus";
+
+			foreach (var pacientas in darbuotojas.Pacientai)
+			{
+				pacientas.Statusas = "neaktyvus";
+				pacientas.DarbuotojasId = null;
+			}
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
@@ -266,6 +274,7 @@ namespace DarbuotojaiWeb.Controllers
 			Darbuotojas? darbuotojas = _db.Darbuotojai
 										  .Include(d => d.DarbuotojasPareigos)
 										  .ThenInclude(dp => dp.Pareiga)
+										  .Include(d => d.Pacientai)
 										  .FirstOrDefault(u => u.DarbuotojasId == id);
 
 			if (darbuotojas == null)

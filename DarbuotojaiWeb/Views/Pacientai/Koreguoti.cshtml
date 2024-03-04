@@ -1,0 +1,139 @@
+﻿@using DarbuotojaiWeb.Models
+@model Pacientas
+@{
+	List<Darbuotojas> darbuotojaiPriskyrimui = ViewBag.DarbuotojuSar;
+}
+
+<style>
+	.hidden {
+		display: none;
+	}
+</style>
+
+
+<div class="text-danger">
+	@foreach (var modelState in ViewData.ModelState.Values)
+	{
+		foreach (var error in modelState.Errors)
+		{
+			<p>@error.ErrorMessage</p>
+		}
+	}
+</div>
+
+<form method="post">
+	<input asp-for="PacientasId" hidden />
+	<div class="border p-3 mt-4">
+		<h2 class="text-primary">Koreguoti paciento duomenis</h2>
+		<hr />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Vardas</label>
+		<input asp-for="Vardas" class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Pavardė</label>
+		<input asp-for="Pavarde" class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Asmens kodas</label>
+		<input asp-for="AsmensKodas" class="form-control" />
+	</div>
+	<div class="mb-3 row p-1">
+		<label class="p-0">Adresas</label>
+		<input asp-for="Adresas" class="form-control" />
+	</div>
+
+	<div class="mb-3 row p-1">
+		<label class="mb-3">Priskirtas darbuotojas:</label>
+		<div id="parinktoDarbuotojoLaukas">
+			<div class='parinktas-darbuotojas'>
+				<span class='selected-darbuotojas-name'>@Model.Darbuotojas</span>
+				<button type='button' class='remove-selected-darbuotojas' data-darbuotojas-id='@Model.Darbuotojas.DarbuotojasId'>x</button>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="mb-3 row p-1">
+		<label>Priskirti darbuotoją:</label>
+		<input type="text" id="darbuotojoPaieska" class="form-control" placeholder="Ieškoti darbuotojo" />
+		<div id="darbuotojasSar" class="hidden">
+			@foreach (var darbuotojas in darbuotojaiPriskyrimui)
+			{
+				<div class="form-check">
+					<input type="checkbox" name="pasirinktasDarbuotojas" value="@darbuotojas.DarbuotojasId"
+					@(darbuotojas == Model.Darbuotojas ? "checked" : "")/>
+					<label>@darbuotojas</label>
+				</div>
+			}
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#darbuotojoPaieska").on("input", function () {
+				var paieskosTekstas = $(this).val().toLowerCase();
+				$("#darbuotojasSar .form-check").each(function () {
+					var label = $(this).find("label").text().toLowerCase();
+					if (label.includes(paieskosTekstas)) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				});
+
+				if (paieskosTekstas.length > 0) {
+					$("#darbuotojasSar").removeClass("hidden");
+				} else {
+					$("#darbuotojasSar").addClass("hidden");
+				}
+			});
+
+
+			$("input[name='pasirinktasDarbuotojas']").on("change", function () {
+				var selectedDarbuotojasId = $(this).val();
+				var selectedDarbuotojasVardas = $(this).next("label").text();
+
+				$("input[name='pasirinktasDarbuotojas']").not(this).prop("checked", false);
+
+				$(".parinktas-darbuotojas").remove();
+
+				if ($(this).is(":checked")) {
+					$("#parinktoDarbuotojoLaukas").append("<div class='parinktas-darbuotojas'>" +
+						"<span class='selected-darbuotojas-vardas'>" + selectedDarbuotojasVardas + "</span>" +
+						"<button type='button' class='remove-selected-darbuotojas' data-darbuotojas-id='" + selectedDarbuotojasId + "'>x</button>" +
+						"</div>");
+				} else {
+					$("#parinktoDarbuotojoLaukas").find("[data-darbuotojas-id='" + selectedDarbuotojasId + "']").parent().remove();
+				}
+				validateForm();
+			});
+
+			$(document).on("click", ".remove-selected-darbuotojas", function () {
+				var darbuotojoIdPasalinimui = $(this).data("darbuotojas-id");
+				$("input[name='pasirinktasDarbuotojas'][value='" + darbuotojoIdPasalinimui + "']").prop("checked", false);
+				$(this).parent().remove();
+			});
+
+			$("#submitBtn").on("click", function (e) {
+				if ($("input[name='pasirinktasDarbuotojas']:checked").length === 0) {
+					e.preventDefault();
+					alert("Priskirkite darbuotoją!");
+				}
+			});
+		});
+	</script>
+
+	<div class="row">
+		<div class="col-6 col-md-3">
+			<button type="submit" id="submitBtn" class="btn btn-primary form-control">Išsaugoti pakeitimus</button>
+		</div>
+		<div class="col-6 col-md-3">
+			<a asp-controller="Pacientai" asp-action="Index" class="btn btn-outline-secondary border form-control">
+				Atgal
+			</a>
+		</div>
+	</div>
+</form>

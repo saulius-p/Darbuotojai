@@ -13,6 +13,7 @@ namespace DarbuotojaiWeb.Data
 		public DbSet<Darbuotojas> Darbuotojai { get; set; }
 		public DbSet<Pareiga> Pareigos { get; set; }
 		public DbSet<DarbuotojasPareiga> DarbuotojasPareigos { get; set; }
+		public DbSet<Pacientas> Pacientai { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

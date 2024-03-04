@@ -1,0 +1,170 @@
+﻿@model DarbuotojaiWeb.Controllers.PacientaiController.PaginatedList<Pacientas>
+
+<div class="container">
+	<div class="row pt-4 pb-3">
+		<div class="col-6">
+			<h2 class="text-primary">
+				Pacientų sąrašas
+			</h2>
+		</div>
+		<div class="col-6 text-end">
+			<a asp-controller="Pacientai" asp-action="Prideti" class="btn btn-primary">
+				<i class="bi bi-plus-circle-dotted"></i> Pridėti pacientą
+			</a>
+		</div>
+	</div>
+
+	<form method="post" class="container mt-1 mb-4">
+		<div class="row">
+			<div class="col-md-4">
+				<input type="text" class="form-control" name="vardas" placeholder="Vardas">
+			</div>
+			<div class="col-md-4">
+				<input type="text" class="form-control" name="pavarde" placeholder="Pavardė">
+			</div>
+			<div class="col-md-4">
+				<select class="form-select" name="statusas" aria-label="Statusas">
+					<option value="">-- Pasirinkite statusą --</option>
+					<option value="aktyvus">Aktyvus</option>
+					<option value="neaktyvus">Neaktyvus</option>
+				</select>
+			</div>
+			<input type="hidden" name="pusl" value="1">
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> Filtruoti</button>
+				<a asp-controller="Pacientai" asp-action="Index" class="btn btn-primary">
+					<i class="bi bi-x"></i> Nuimti filtrą
+				</a>
+			</div>
+		</div>
+	</form>
+
+	<table class="table table-bordered table-stripped">
+		<thead>
+			<tr>
+				<th>
+					Vardas
+				</th>
+				<th>
+					Pavardė
+				</th>
+				<th>
+					Asmens kodas
+				</th>
+				<th>
+					Statusas
+				</th>
+				<th>
+					Priskirtas darbuotojas
+				</th>
+				<th>
+					<i class="bi bi-sliders"></i> Veiksmai
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var pacientas in Model.Items)
+			{
+				<tr>
+					<td>@pacientas.Vardas</td>
+					<td>@pacientas.Pavarde</td>
+					<td>@pacientas.AsmensKodas</td>
+					@if (pacientas.Statusas == "aktyvus")
+					{
+						<td class="text-success">@pacientas.Statusas</td>
+						<td>
+							@pacientas.Darbuotojas
+							<br>
+							<button class="btn btn-primary" onclick="rodytiDarbuotojoLanga('@pacientas.Darbuotojas.Vardas', '@pacientas.Darbuotojas.Pavarde', 
+							'@pacientas.Darbuotojas.GimimoData', '@pacientas.Darbuotojas.Adresas', '@pacientas.Darbuotojas.DarbuotojasId',  
+							'@string.Join(", ", pacientas.Darbuotojas.DarbuotojasPareigos.Select(dp => dp.Pareiga.Pavadinimas))')">
+								Rodyti darbuotojo informaciją
+							</button>
+						</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a asp-controller="Pacientai" asp-action="Ziureti" asp-route-id="@pacientas.PacientasId" class="btn btn-success mx-2" style="width: 150px;">
+									<i class="bi bi-eye-fill"></i> Žiūrėti duomenis
+								</a>
+								<a asp-controller="Pacientai" asp-action="Koreguoti" asp-route-id="@pacientas.PacientasId" class="btn btn-primary mx-2" style="width: 150px;">
+									<i class="bi bi-pencil"></i> Koreguoti duomenis
+								</a>
+								<a asp-controller="Pacientai" asp-action="Pasalinti" asp-route-id="@pacientas.PacientasId" class="btn btn-danger mx-2" style="width: 150px;">
+									<i class="bi bi-file-earmark-minus"></i> Pašalinti pacientą
+								</a>
+							</div>
+						</td>
+					}
+					else
+					{
+						<td class="text-secondary">@pacientas.Statusas</td>
+						<td>@pacientas.Darbuotojas</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a asp-controller="Pacientai" asp-action="Ziureti" asp-route-id="@pacientas.PacientasId" class="btn btn-secondary mx-2" style="width: 150px;">
+									<i class="bi bi-eye-fill"></i> Žiūrėti duomenis
+								</a>
+							</div>
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<nav aria-label="Page navigation">
+					<ul class="pagination">
+						@for (var i = 1; i <= Model.TotalPages; i++)
+						{
+							<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+								<a class="page-link" href="?pusl=@i&vardas=@ViewData["VardasFilter"]&pavarde=@ViewData["PavardeFilter"]&statusas=@ViewData["StatusasFilter"]">@i</a>
+							</li>
+						}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts {
+	<script>
+		function rodytiDarbuotojoLanga(vardas, pavarde, gimimoData, adresas, darbuotojasId, pareigos) {
+
+			document.querySelectorAll('.modal').forEach(modal => modal.remove('en-Gb'));
+			
+			var langoId = darbuotojasId;
+			var gimimoDataLangui = new Date(gimimoData + 'Z').toISOString().split('T')[0];
+			var langoTurinys = `
+						<div class="modal fade" id="${langoId}" tabindex="-1" role="dialog" aria-labelledby="langas" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="langas">${vardas} ${pavarde}</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="uzdaryti"></button>
+									</div>
+									<div class="modal-body">
+										<p><strong>Gimimo data:</strong> ${gimimoDataLangui}</p>
+										<p><strong>Adresas:</strong> ${adresas}</p>
+										<hr>
+										<p><strong>Darbuotojo ID:</strong> ${darbuotojasId}</p>
+										<p><strong>Pareigos:</strong> ${pareigos}</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Uždaryti</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					`;
+
+			document.body.insertAdjacentHTML('beforeend', langoTurinys);
+
+			var langas = new bootstrap.Modal(document.getElementById(langoId));
+			langas.show();
+		}
+	</script>
+}

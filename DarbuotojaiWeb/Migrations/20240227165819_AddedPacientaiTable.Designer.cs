@@ -4,6 +4,7 @@ using DarbuotojaiWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DarbuotojaiWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227165819_AddedPacientaiTable")]
+    partial class AddedPacientaiTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +93,7 @@ namespace DarbuotojaiWeb.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
-                    b.Property<int?>("DarbuotojasId")
+                    b.Property<int>("DarbuotojasId")
                         .HasColumnType("int");
 
                     b.Property<string>("Pavarde")
@@ -191,7 +194,9 @@ namespace DarbuotojaiWeb.Migrations
                 {
                     b.HasOne("DarbuotojaiWeb.Models.Darbuotojas", "Darbuotojas")
                         .WithMany("Pacientai")
-                        .HasForeignKey("DarbuotojasId");
+                        .HasForeignKey("DarbuotojasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Darbuotojas");
                 });

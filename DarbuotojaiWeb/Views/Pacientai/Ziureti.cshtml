@@ -1,8 +1,5 @@
 ﻿@using DarbuotojaiWeb.Models
-@model Darbuotojas
-@{
-	List<Pareiga> galimosPareigos = ViewBag.GalimosPareigos;
-}
+@model Pacientas
 
 <style>
 	.hidden {
@@ -24,7 +21,7 @@
 <form method="post">
 	<input asp-for="DarbuotojasId" hidden />
 	<div class="border p-3 mt-4">
-		<h2 class="text-primary">Darbuotojo duomenys</h2>
+		<h2 class="text-primary">Paciento duomenys</h2>
 		<hr />
 	</div>
 	<div class="mb-3 row p-1">
@@ -36,33 +33,21 @@
 		<input asp-for="Pavarde" disabled class="form-control" />
 	</div>
 	<div class="mb-3 row p-1">
-		<label class="p-0">Gimimo data</label>
-		<input asp-for="GimimoData" type="date" disabled class="form-control" />
+		<label class="p-0">Asmens kodas</label>
+		<input asp-for="AsmensKodas" disabled class="form-control" />
 	</div>
 	<div class="mb-3 row p-1">
 		<label class="p-0">Adresas</label>
 		<input asp-for="Adresas" disabled class="form-control" />
 	</div>
-
 	<div class="mb-3 row p-1">
-		<label class="mb-3">Priskirtos pareigos:</label>
-		@foreach (var pareiga in Model.DarbuotojasPareigos.Select(dp => dp.Pareiga))
-		{
-			<span>@pareiga.Pavadinimas</span>
-		}
-	</div>
-
-	<div class="mb-3 row p-1">
-		<label class="mb-3">Priskirti pacientai:</label>
-		@foreach (var pacientas in Model.Pacientai)
-		{
-			<span>@pacientas.Vardas @pacientas.Pavarde</span>
-		}
+		<label class="mb-3">Priskirtas darbuotojas:</label>
+		<span>@Model.Darbuotojas</span>
 	</div>
 
 	<div class="row">
 		<div class="col-6 col-md-3">
-			<a asp-controller="Darbuotojai" asp-action="Index" class="btn btn-outline-secondary border form-control">
+			<a asp-controller="Pacientai" asp-action="Index" class="btn btn-outline-secondary border form-control">
 				Atgal
 			</a>
 		</div>
