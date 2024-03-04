@@ -30,7 +30,7 @@ namespace DarbuotojaiWeb.Controllers
         /// <param name="pavarde">Paieškos tekstas ieškojimui pagal pavardę.</param>
         /// <param name="statusas">Paieškos tekstas ieškojimui pagal statusą.</param>
         /// <param name="pusl">Puslapio, į kurį sunaviguota, numeris.</param>
-        /// <returns>Rodinys su palapiuotu darbuotojų sąrašu.</returns>
+        /// <returns>Rodinys su palapiuotu pacientų sąrašu.</returns>
         public IActionResult Index(string vardas, string pavarde, string statusas, int pusl = 1)
         {
 
@@ -232,12 +232,12 @@ namespace DarbuotojaiWeb.Controllers
 		}
 
 		/// <summary>
-		/// Įvykdoma HTTP POST užklausa darbuotojo pašalinimui (statuso pakeitimui).
+		/// Įvykdoma HTTP POST užklausa paciento pašalinimui (statuso pakeitimui).
 		/// </summary>
-		/// <param name="id">Darbuotojo, kurį norima pašalinti, id.</param>
+		/// <param name="id">Paciento, kurį norima pašalinti, id.</param>
 		/// <returns>
-		/// Jeigu darbuotojo su tokiu ID nėra duomenų bazėje, grąžiname "NotFound".
-		/// Darbuotojo statusas duomenų bazėje pakeičiamas į "neaktyvus" ir nukreipiama (redirect) į darbuotojų sąrašą.
+		/// Jeigu paciento su tokiu ID nėra duomenų bazėje, grąžiname "NotFound".
+		/// Paciento statusas duomenų bazėje pakeičiamas į "neaktyvus" ir nukreipiama (redirect) į pacientų sąrašą.
 		/// </returns>
 		[HttpPost, ActionName("Pasalinti")]
 		public IActionResult PasalintiPOST(int? id)
